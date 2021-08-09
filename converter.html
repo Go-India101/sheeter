@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sheeter - Converter</title>
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="theme-color" content="#241d33">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+<link rel="icon" href="sheeter.png" type="image/icon">
+<meta name="title" content="Sheeter">
+<meta name="description" content="Sheeter is an Free and Open-Source App without ads to Create PDF in just simple ways, Works in Both Desktops and Phones.">
+<meta name="keywords" content="Sheeter">
+<meta name="robots" content="index, follow">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="language" content="English">
+<meta name="author" content="Ganik Parashar">
+
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="_site/assets/main.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Image to PDF Converter" /></head>
+
+<!-- Bootstrap core CSS -->
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+		
+		<!-- Custom CSS -->
+		<style>
+			body{
+				background-color: #241d33;
+			}
+			
+			#previewImages {
+				display: block;
+				height: 250px;
+
+				margin-bottom: 10px;
+				border: 3px solid transparent;
+				border-image: linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%);
+				background: transparent;
+				border-image-slice: 1;
+				overflow-y: scroll;
+				border-radius: 5px;
+			}
+			#previewImages::-webkit-scrollbar {
+			  width: 10px
+			}
+			 
+			#previewImages::-webkit-scrollbar-track {
+			  box-shadow: transparent;
+			}
+			 
+			#previewImages::-webkit-scrollbar-thumb {
+			  background-color: transparent;
+			  outline: none;
+			}
+			
+			#previewImages img {
+				    display: block;
+					float: left;
+					padding: 2px;
+					width: 100px;
+					height: 100px;
+				border: 3px solid transparent;
+				border-image: linear-gradient(to bottom right, #b827fc 0%, #2c90fc 25%, #b8fd33 50%, #fec837 75%, #fd1892 100%);
+				background: transparent;
+				border-image-slice: 1;
+					margin: 2px;
+					border-radius: 5px;
+			}
+
+			.btn-file{
+				overflow: hidden;
+				position: relative;
+			}
+			.convertnow{
+				color: white;
+				font-family: 'Lato', sans-serif;
+				font-weight: bold;
+				font-size: 15pt;
+				background-color: transparent;
+				border: 4px solid #fd1892;
+				width: 200px;
+				height: 50px;
+				border-radius: 10px;
+				min-width: 85%;
+				min-height: 85%;
+			}
+			.convertnow:focus{
+				outline: none;
+			}
+.btn-select::-webkit-file-upload-button {
+  visibility: hidden;
+}
+.btn-select::before {
+  content: 'Select';
+  font-weight: bold;
+  font-family: 'Lato', sans-serif;
+  font-size: 15pt;
+  text-align: center;
+  outline: none;
+color: white;
+float: left;
+min-width: 100%;
+min-height: 100%;
+background-color: transparent;
+border: 4px solid #b8fd33;
+width: 200px;
+height: 50px;
+border-radius: 10px;
+  cursor: pointer;
+  line-height: 45px;
+}
+
+		</style>
+		
+		<!-- PDFLib JS -->
+		<script src="https://unpkg.com/pdf-lib@1.4.0"></script>
+		
+		<!-- PDFDownload JS -->
+		<script src="https://unpkg.com/downloadjs@1.4.7"></script>
+		
+		<!-- CUSTOM JS -->
+		<script type="text/javascript">
+			// Getting Individual Image URL's
+			var imageURL = [];
+			
+			// Choose Multiple Images and Preview
+			function previewFiles() {				
+				var preview = document.querySelector('#previewImages');
+				var files   = document.querySelector('input[type=file]').files;				
+				// Preview upload Images
+				function readAndPreview(file) {
+					// Make sure `file.name` matches our extensions criteria
+					if ( /\.(jpe?g|png|gif)$/i.test(file.name) ) {
+						var reader = new FileReader();
+
+						reader.addEventListener("load", function () {					    
+							var image = new Image();
+							image.title = file.name;
+							image.src = this.result;
+							preview.appendChild( image );
+							// Pushing to all imageURL's
+							imageURL.push(this.result);
+						}, false);
+						
+						reader.readAsDataURL(file);
+					}
+				}				
+				//Recusive Loop
+				if (files) {
+					[].forEach.call(files, readAndPreview);
+				}
+			}			
+		
+			// Image convert into PDF format using PDFLib
+			var { PDFDocument } = PDFLib
+			async function embedImages() {
+				// Create a new PDFDocument
+				var pdfDoc = await PDFDocument.create()
+				
+				// Recusive loop to read images
+				for (var i=0; i<imageURL.length; i++){				
+					var imageBytes = await fetch(imageURL[i]).then((res) => res.arrayBuffer())
+					
+					// Fetch Image Type
+					var imageType = imageURL[i].split(";",1);
+					
+					// To Find Image Type
+					if(imageType == "data:image/jpeg") {
+						var embedImage = await pdfDoc.embedJpg(imageBytes)
+					} else {
+						var embedImage = await pdfDoc.embedPng(imageBytes)
+					}
+					
+					// Get the width/height of the image scaled down to 25% of its original size
+					var imageDims = (embedImage).scale(0.5)
+					
+					// Add a blank page to the document
+					var page = pdfDoc.addPage()
+					
+					// Draw the image in the center of the page
+					page.drawImage(embedImage, {
+						x: page.getWidth() / 2 - imageDims.width / 2,
+						y: page.getHeight() / 2 - imageDims.height / 2,
+						width: imageDims.width,
+						height: imageDims.height,
+					})
+				}
+				// Serialize the PDFDocument to bytes (a Uint8Array)
+				var pdfBytes = await pdfDoc.save()			
+				// Trigger the browser to download the PDF document
+				download(pdfBytes, "Sheet.pdf", "application/pdf");
+			}
+		</script>
+<body>
+	<center>
+
+<br><br> 
+
+<main class="page-content" aria-label="Content">
+    <div class="wrapper">
+        
+		<div id="previewImages"></div><br><br>
+			<input id="browse" class="btn-select" type="file" onchange="previewFiles()" multiple>
+			<button class="convertnow" onclick="embedImages()">Convert</button>
+    </div>
+</main>
+
+<footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+  </div>
+
+</footer>
+</body>
+
+</html>

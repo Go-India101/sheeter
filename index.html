@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Sheeter</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<meta name="title" content="Sheeter">
+<meta name="description" content="Sheeter is an Free and Open-Source App without ads to Create PDF in just simple ways, Works in Both Desktops and Phones.">
+<meta name="keywords" content="Sheeter">
+<meta name="robots" content="index, follow">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="language" content="English">
+<meta name="author" content="Ganik Parashar">
+	  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap" rel="stylesheet">
+	<style type="text/css">
+			body{
+				background-color: #241d33;
+				font-family: 'Lato', sans-serif;
+				color: white;
+				text-align: center;
+			}
+			h1{
+				font-size: 40pt;
+			}
+			h2{
+				font-size: 25pt;
+			}
+			::selection{
+				background-color: #fec837;
+				color: white;
+			}
+			.shot1{
+				width: 80%;
+				border: 4px solid #2c90fc;
+				border-radius: 20px;
+			}
+			.text{
+					font-weight: bold;
+					font-size: 15pt;
+			}
+
+::-webkit-scrollbar
+{
+	width: 0;
+}
+#scrollPath
+{
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 10px;
+	height: 100%;
+	border-radius: 10px;
+	background: rgba(255,255,255,0.05);
+}
+#progressbar
+{
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 15px;
+	border-radius: 10px;
+
+	background: linear-gradient(to top, #008aff,#00ffe7);
+	animation: animate 10s linear infinite;
+}
+@keyframes animate
+{
+	0%,100%
+	{
+		filter: hue-rotate(0deg);
+	}
+	50%
+	{
+		filter: hue-rotate(360deg);
+	}
+}
+#progressbar:before
+{
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(to top, #008aff,#00ffe7);
+	filter: blur(10px);
+}
+#progressbar:before
+{
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(to top, #008aff,#00ffe7);
+	filter: blur(30px);
+}
+			button{
+				color: white;
+				font-family: 'Lato', sans-serif;
+				font-weight: bold;
+				font-size: 15pt;
+				background-color: transparent;
+				border: 4px solid #b827fc;
+				width: 200px;	
+				height: 50px;
+				border-radius: 10px;
+				min-width: 85%;
+				min-height: 85%;
+			}
+			button:hover{
+				border: 4px solid #ffffff;
+				background-color: #b827fc;
+				cursor: pointer;
+			}
+
+	</style>
+</head>
+<body>
+	<center></center>
+	<div id="progressbar"></div>
+<div id="scrollpath"></div>
+	<h1>Sheeter</h1><br>
+	<img src="1.png" class="shot1"><br><br><br><br>
+	<a href="converter.html"><button>CONVERT!</button></a><br><br><br><br>
+	<h2>WHAT IS SHEETER?</h2><br>
+	<font class="text">Sheeter is an Open-Source and Free App without Ads to Convert any Image To PDF with High Resolution </font>
+	<script type="text/javascript">
+	let progress = document.getElementById('progressbar');
+	let totalHeight = document.body.scrollHeight - window.innerHeight;
+	window.onscroll = function () {
+		let progressHeight = (window.pageYOffset / totalHeight) * 100;
+		progress.style.height = progressHeight + "%";
+	}
+</script>
+	</center>
+</body>
+</html>
